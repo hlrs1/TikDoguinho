@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"   
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+
+        <c:if test="#{loginController.usuarioLogado eq null}" >
+            <script>
+                location.href = 'login.xhtml'
+            </script>
+        </c:if>
+        <b:growl id="growMenu" delay="4000" show-detail="true" show-summary="true"/>
+        <b:form id="formMenu">
+            <b:navBar brand="Home" brandHref="indexUsuario.xhtml" fluid="true">
+                <b:navbarLinks>
+                    <b:navLink value="Meus Pets" href="meusPets.xhtml"/>
+                </b:navbarLinks>
+                <b:navbarLinks>
+                    <b:navCommandLink  value="Compartilhados comigo"   href="#{usuarioController.buscarCompartilhados(loginController.usuarioLogado)}" onclick="location.href = 'compartilhadosComigo.xhtml'" ajax="false">
+                        <c:set var="cont" value="#{loginController.usuarioLogado.idsDePetsRecebidos.size()}"/>
+                        <c:choose>
+                            <c:when test="#{loginController.usuarioLogado.idsDePetsRecebidos.size() > 0 }">
+                                <sup>
+                                    <h:outputText value="${cont}" style="color: red; font-size: small; font-style: inherit  "/>
+                                </sup>
+                            </c:when>
+                            <c:otherwise>
+                                <sup>
+                                    <h:outputText value="${cont}" style="color: white; font-size: small; font-style: inherit  "/>
+                                </sup>
+                            </c:otherwise>
+
+
+                        </c:choose>
+                    </b:navCommandLink>
+                </b:navbarLinks>
+                
+                <b:navbarLinks pull="right">
+                    <p:graphicImage id="imagemUsuario" width="20" height="20" cache="false" class="img-thumbnail" value="#{usuarioController.imagemAtual}" style="border-radius: 50%; width: 50px; height: 50px; " />
+                    <b:dropMenu value="#{(loginController.usuarioLogado ne null?loginController.usuarioLogado.usuario:'')}">
+                        <b:navLink value="meu perfil" href="perfilUsuario.xhtml"></b:navLink>
+                        <b:navLink></b:navLink>
+                        <b:navLink value="logout" 
+                                   onclick="location.href = 'login.xhtml';ajax:loginController.logout()"></b:navLink>
+                    </b:dropMenu>
+                </b:navbarLinks>
+            </b:navBar>
+        </b:form>
+        <p:separator/>
+    </h:body>
+</html>
+

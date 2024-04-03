@@ -1,0 +1,132 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"   
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+
+        <ui:include src="menuPet.xhtml" />
+        <br/>
+        <c:if test="#{petController.mes ne null}">
+            <script>
+                onload.call(#{petController.updateVar()});
+            </script>
+        </c:if>
+        <c:if test="#{loginController.usuarioLogado eq null}" >
+            <script>
+                location.href = 'login.xhtml';
+            </script>
+        </c:if>
+        <b:growl id="growMenu1" delay="4000" show-detail="true" show-summary="true"/>
+        <div style="width: 50%;margin: 0 auto">
+            <h:form id="formPerfilPet">
+
+                <p:fieldset legend="Informações de #{petController.selection.nome}">
+                    <c:set var="pet" value="#{petController.selection}"/>
+                    <b:panelGrid columns="3" colSpans="4,4,4">
+                        <p:panel>
+                            <f:facet name="header">
+                        <h:outputText value="Nome:"/>
+                            </f:facet>
+                        <h:outputText id="txtNome" value="#{pet.nome}"/>
+                        </p:panel>
+                        <p:panel>
+                            <f:facet name="header"> <h:outputText value="Mes/Ano de Nascimento:"/></f:facet>
+                        <h:outputText id="txtMesAno" value="#{pet.mesAnoDeNascimento}"/>
+                        </p:panel>
+                        <p:panel>
+                             <f:facet name="header">
+                                 <h:outputText value="Porte:"/></f:facet>
+                        <h:outputText id="txtPorte" value="#{pet.porte}"/>
+                        </p:panel>
+                        
+                        <c:forEach var="tutor" items="#{pet.tutor}" varStatus="i">
+                            <p:panel>
+                             <f:facet name="header">
+                                 <h:outputText value="Tutor ${i.index+1}:"/></f:facet>
+                            <h:outputText id="txtTutor" value="${tutor.usuario}"/> 
+                       
+                        </p:panel>
+                        </c:forEach>
+
+                    </b:panelGrid>
+
+                    <p:commandButton value="editar" ajax='true' update=":formEditPet"
+                                     oncomplete="$('.mPet').modal('show')"/> 
+                    <h:commandButton value="voltar" action="perfilPet"/>
+
+                </p:fieldset>
+
+                <p:dialog id="dialCadUsuario"  
+                          modal="true" visible="false" showEffect="fade" hideEffect="fade"
+                          widgetVar="widDialEditUsuario">
+
+                    <h:outputText value="Deseja realmente editar o usuario?"/><br/>
+                    <p:commandButton value="sim" action="#{usuarioController.alterar()}"
+                                     oncomplete="PF('widDialCadUsuario').hide();"
+                                     />
+                    <p:commandButton value="não" oncomplete="PF('widDialCadUsuario').hide()"/>
+
+                </p:dialog>
+
+            </h:form>
+            <p:separator/>
+
+            <b:form id="formEditPet" enctype="multipart/form-data">
+                <b:modal id="modalEditPet" class="mPet">
+                    <p:fieldset legend="Editar pet">
+                    <b:panelGrid columns="2">
+
+                        <h:outputText value="#{petController.selection.codigo}"/>
+                        <b:inputText value="#{petController.selection.nome}"/>
+                        <b:panelGrid columns="1">
+                            <h:outputText value="Mes de Nascimento"/>
+                            <b:selectOneMenu value="#{petController.mes}">
+                                <f:selectItem itemValue="Jan" itemLabel="Janeiro" /> 
+                                <f:selectItem itemValue="Fev" itemLabel="Fevereiro"/>
+                                <f:selectItem itemValue="Mar" itemLabel="Março"/>
+                                <f:selectItem itemValue="Abr" itemLabel="Abril"/>
+                                <f:selectItem itemValue="Mai" itemLabel="Maio"/>
+                                <f:selectItem itemValue="Jun" itemLabel="Junho"/>
+                                <f:selectItem itemValue="Jul" itemLabel="Julho"/>
+                                <f:selectItem itemValue="Ago" itemLabel="Agosto"/>
+                                <f:selectItem itemValue="Set" itemLabel="Setembro"/>
+                                <f:selectItem itemValue="Out" itemLabel="Outubro"/>
+                                <f:selectItem itemValue="Nov" itemLabel="Novembro"/>
+                                <f:selectItem itemValue="Dez" itemLabel="Dezembro"/>
+                            </b:selectOneMenu> 
+
+                        </b:panelGrid>
+
+                        <b:panelGrid columns="1">
+                            <h:outputText value="Ano de Nascimento"/>
+                            <b:inputText value="#{petController.ano}"/>                      
+                        </b:panelGrid>
+
+                        <b:panelGrid columns="1">
+                            <h:outputText value="Porte"/>
+                            <b:selectOneMenu value="#{petController.selection.porte}">
+                                <f:selectItem itemValue="Pequeno" itemLabel="Pequeno" /> 
+                                <f:selectItem itemValue="Médio" itemLabel="Médio"/>
+                                <f:selectItem itemValue="Grande" itemLabel="Grande"/>
+                            </b:selectOneMenu>                       
+                        </b:panelGrid>
+                    </b:panelGrid>
+</p:fieldset>
+                    <b:commandButton value="editar" action="#{petController.editarPerfil()}"/> 
+
+
+
+                </b:modal>
+            </b:form>
+        </div>
+    </h:body>
+</html>
+

@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <c:if test="#{loginController.usuarioLogado ne null}" >
+            <ui:include src="menuUsuario.xhtml" />
+            <p:growl id="gro" life="4000" showSummary="true" 
+                     showDetail="true" sticky="false"/>
+            <b:form id="formPets">
+                <p:fieldset legend="Meus Pets" style="width: 80%;margin: 0 auto" >
+                    <p:commandButton value="novo pet" onclick="location.href = 'inserirPet.xhtml'"/>
+                    <b:panelGrid columns="3" style="width: 100%;margin: 0 auto" colSpans="4,4,4" >
+
+                        <c:forEach items="#{petController.readPetsByTutor(loginController)}" var="pet">
+                            <p:panel header="${pet.nome}" style="text-align:center">
+                                <p:commandLink action="#{petController.setarSelection(pet)}" oncomplete="location.href = 'perfilPet.xhtml'" onmouseup="console.log(${pet})">
+                                    <p:graphicImage id="imagemPet" width="20" height="20" cache="false" class="img-thumbnail"   value="#{petController.imagemDoPet}" style="border-radius: 50%; width: 100px; height: 100px; "/>
+                                </p:commandLink>
+                                <p:panel>
+                                    <h:outputText value="Porte: ${pet.porte}"/>
+                                </p:panel>
+                                <p:panel> 
+                                    <b:panelGrid columns="2">
+                                        <p:commandButton style="font-size: 12px " value="compartilhar" oncomplete="PF('widDialBusca').show()"
+                                                         update=":dialBusca" ajax="true" disabled="${pet.compartilhado}"/>
+
+                                        <p:commandButton style="font-size: 12px; width: 100px; height: 27px;" value="deletar" onmousedown="#{petController.setarSelection(pet)}" action="#{petController.deletar()}"
+                                                         update=":gro @form">
+                                            <p:confirm message="Deseja realmente deletar este pet?"/>
+                                        </p:commandButton>
+                                    </b:panelGrid>
+                                </p:panel>
+                            </p:panel>
+                        </c:forEach>
+
+
+
+                        <p:confirmDialog global="true" >
+                            <p:commandButton value="sim" styleClass="ui-confirmdialog-yes"/>
+                            <p:commandButton value="no" styleClass="ui-confirmdialog-no"/>
+                        </p:confirmDialog>
+                    </b:panelGrid>
+                </p:fieldset>
+            </b:form>
+
+            <p:dialog id="dialBusca" visible="false" modal="true"
+                      widgetVar="widDialBusca">
+                <b:form id="formBusca">
+                    <p:panel >
+                        <h3 align="center">Buscar Usuário</h3>
+                        <h:outputText value= "Digite o usuário:"/>
+                        <b:inputText  value="#{petController.usuario}"></b:inputText>
+                        <p:commandButton style="width: 50%;margin: 0 auto" value="buscar" 
+                                         oncomplete="PF('widDialUsuario').show()" onclick="PF('widDialBusca').hide()"
+                                         update=":dialUsuario :teste :gro" />
+                    </p:panel>
+                    <!--<p:commandButton value="detalhar" 
+                                     oncomplete="PF('widDialUsuario').show()"
+                                     update=":dialUsuario"/>-->
+                </b:form>
+            </p:dialog>
+
+            <p:dialog id="dialUsuario" visible="false" modal="true"
+                      widgetVar="widDialUsuario">
+                <b:form id="teste">
+                    <p:panel >
+                        <h3 align="center">Compartilhar Pet</h3>
+                        <c:if test="#{petController.usuario ne null}">
+
+                            <p:dataGrid style="margin: 0 auto;" id="tblUsuarios" value="#{petController.buscarUsuario()}" var="usuario" columns="3">
+                                <b:panelGrid columns="3" colSpans="4,4,4">
+                                    <p:panel style="text-align:center" >
+                                        <f:facet name="header">Login</f:facet>
+                                            #{usuario.usuario}
+                                    </p:panel>
+                                    <p:panel style="text-align:center">
+                                        <f:facet name="header">E-mail</f:facet>
+                                            #{usuario.email}
+                                    </p:panel>
+
+                                    <p:panel header="compartilhar" style="text-align:center;align-content: center" >
+                                        <p:commandButton style="font-size: 12px; align-content: center" value="compartilhar" update=":teste :gro :dialUsuario" action="#{usuarioController.compartilharPet(petController.selection)}" oncomplete="#{usuarioController.setSelection(usuario)}" ajax="true">
+                                            <p:confirm message="Deseja realmente compartilhar o pet #{petController.selection.nome} com o usuário #{usuarioController.selection.usuario}?"/>
+                                        </p:commandButton>
+                                    </p:panel>
+                                </b:panelGrid>
+
+                            </p:dataGrid>
+                        </c:if>
+                    </p:panel>
+                    <!--<p:commandButton value="detalhar" 
+                                     oncomplete="PF('widDialUsuario').show()"
+                                     update=":dialUsuario"/>-->
+
+
+
+                    <p:confirmDialog global="true" >
+                        <p:commandButton value="sim" styleClass="ui-confirmdialog-yes"/>
+                        <p:commandButton value="no" styleClass="ui-confirmdialog-no"/>
+
+                    </p:confirmDialog>
+                </b:form>
+            </p:dialog>
+        </c:if>
+
+        <!-- -->
+
+    </h:body>
+</html>
+

@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form id="formEditPet">
+
+            <p:fieldset legend="Edição de Pet">
+
+                <h:panelGrid columns="3">
+                    <h:outputText value="Nome*:"/>
+                    <h:inputText id="txtLogin" value="#{petController.selection.nome}"
+                                 required="true" requiredMessage="O Campo Nome é obrigatório"/>
+                    <p:message for="txtLogin" />
+                    <h:panelGrid columns="1">
+                        <h:outputText value="Mes de Nascimento"/>
+                        <b:selectOneMenu value="#{petController.mes}">
+                            <f:selectItem itemValue="Jan" itemLabel="Janeiro" /> 
+                            <f:selectItem itemValue="Fev" itemLabel="Fevereiro"/>
+                            <f:selectItem itemValue="Mar" itemLabel="Março"/>
+                            <f:selectItem itemValue="Abr" itemLabel="Abril"/>
+                            <f:selectItem itemValue="Mai" itemLabel="Maio"/>
+                            <f:selectItem itemValue="Jun" itemLabel="Junho"/>
+                            <f:selectItem itemValue="Jul" itemLabel="Julho"/>
+                            <f:selectItem itemValue="Ago" itemLabel="Agosto"/>
+                            <f:selectItem itemValue="Set" itemLabel="Setembro"/>
+                            <f:selectItem itemValue="Out" itemLabel="Outubro"/>
+                            <f:selectItem itemValue="Nov" itemLabel="Novembro"/>
+                            <f:selectItem itemValue="Dez" itemLabel="Dezembro"/>
+                        </b:selectOneMenu> 
+
+                    </h:panelGrid>
+
+                    <b:panelGrid columns="1">
+                        <h:outputText value="Ano de Nascimento"/>
+                        <b:inputText value="#{petController.ano}"/>                      
+                    </b:panelGrid>
+
+                    <b:panelGrid columns="1">
+                        <h:outputText value="Porte"/>
+                        <b:selectOneMenu value="#{petController.petCadastro.porte}">
+                            <f:selectItem itemValue="Pequeno" itemLabel="Pequeno" /> 
+                            <f:selectItem itemValue="Médio" itemLabel="Médio"/>
+                            <f:selectItem itemValue="Grande" itemLabel="Grande"/>
+                        </b:selectOneMenu>                       
+                    </b:panelGrid>
+
+
+
+                </h:panelGrid>
+
+                <p:commandButton value="editar" oncomplete="PF('widDialEditUsuario').show()"/> 
+                <h:commandButton value="cancelar"/>
+
+            </p:fieldset>
+
+            <p:dialog id="dialCadUsuario"  
+                      modal="true" visible="false" showEffect="fade" hideEffect="fade"
+                      widgetVar="widDialEditUsuario">
+
+                <h:outputText value="Deseja realmente editar o pet?"/><br/>
+                <p:commandButton value="sim" action="#{petController.alterar()}"
+                                 oncomplete="PF('widDialCadUsuario').hide();"
+                                 />
+                <p:commandButton value="não" oncomplete="PF('widDialCadUsuario').hide()"/>
+
+            </p:dialog>
+
+        </h:form>
+    </h:body>
+</html>
+

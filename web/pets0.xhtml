@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <c:if test="#{loginController.usuarioLogado ne null}">
+
+            <p:growl id="gro" life="4000" showSummary="true" 
+                     showDetail="true" sticky="false"/>
+            <b:form id="formPets">
+                <p:panel style="width: 50%;margin: 0 auto">
+                    <h3 align="center">Meus Pets</h3>
+                    <p:dataTable id="tblPets" 
+                                 value="#{petController.readPetsByTutor(loginController)}"
+                                 var="pet" paginator="true" rows="5"
+                                 selection="#{petController.selection}" 
+                                 selectionMode="single"
+                                 rowKey="#{pet.codigo}">
+
+                        <p:column headerText="Código">
+                            #{pet.codigo}
+                        </p:column>
+                        <p:column filterBy="#{pet.nome}">
+                            <f:facet name="header">Nome</f:facet>
+                                #{pet.nome}
+                        </p:column>
+                        <p:column headerText="Porte">
+                            #{pet.porte}
+                        </p:column>
+                        <p:column headerText="Compartilhado">
+                            <h:outputText  value="#{pet.compartilhado}"/>
+                        </p:column>
+                    </p:dataTable>
+                
+                <p:commandButton value="ver perfil" action="perfilPet" ajax="false"/>
+                <p:commandButton value="compartilhar pet" oncomplete="PF('widDialBusca').show()"
+                                 update=":dialBusca" ajax="true" disabled="#{pet.compartilhado}"/>
+                <p:commandButton value="deletar" action="#{petController.deletar()}"
+                                 update=":gro @form">
+                    <p:confirm message="Deseja realmente deletar este pet?"/>
+                </p:commandButton>
+
+                <p:confirmDialog global="true" >
+                    <p:commandButton value="sim" styleClass="ui-confirmdialog-yes"/>
+                    <p:commandButton value="no" styleClass="ui-confirmdialog-no"/>
+                </p:confirmDialog>
+                </p:panel>
+            </b:form>
+
+            <p:dialog id="dialBusca" visible="false" modal="true"
+                      widgetVar="widDialBusca">
+                <b:form id="formBusca">
+                <p:panel >
+                    <h3 align="center">Buscar Usuário</h3>
+                    <h:outputText value= "Digite o usuário:"/>
+                    <b:inputText  value="#{petController.usuario}"></b:inputText>
+                    <p:commandButton style="width: 50%;margin: 0 auto" value="buscar" 
+                                     oncomplete="PF('widDialUsuario').show()" onclick="PF('widDialBusca').hide()"
+                                 update=":dialUsuario" />
+                </p:panel>
+                <!--<p:commandButton value="detalhar" 
+                                 oncomplete="PF('widDialUsuario').show()"
+                                 update=":dialUsuario"/>-->
+                </b:form>
+            </p:dialog>
+            
+            <p:dialog id="dialUsuario" visible="false" modal="true"
+                      widgetVar="widDialUsuario">
+                <p:panel >
+                    <h3 align="center">Compartilhar Pet</h3>
+                    <c:if test="#{petController.usuario ne null}">
+                    <p:dataTable style="margin: 0 auto;width:600px" id="tblUsuarios" 
+                                 value="#{petController.buscarUsuario()}"
+                                 var="usuario"
+                                 selection="#{usuarioController.selection}" 
+                                 selectionMode="single"
+                                 rowKey="#{usuario.codigo}">
+
+                        <p:column headerText="Código">
+                            #{usuario.codigo}
+                        </p:column>
+                        <p:column >
+                            <f:facet name="header">Login</f:facet>
+                                #{usuario.usuario}
+                        </p:column>
+                        <p:column headerText="e-mail">
+                            <b:form id="okid">
+                                <b:commandButton value="compartilhar">
+                                    <f:setPropertyActionListener target="#{usuarioController.selection}" value="#{usuario}"/>
+                                </b:commandButton></b:form>
+                        </p:column>
+
+                    </p:dataTable>
+                        </c:if>
+                </p:panel>
+                <!--<p:commandButton value="detalhar" 
+                                 oncomplete="PF('widDialUsuario').show()"
+                                 update=":dialUsuario"/>-->
+                <b:form id="teste">
+                    
+                        <p:commandButton value="compartilhar" action="#{usuarioController.compartilharPet(petController.selection)}"
+                                         
+                                          update=":gro @form">
+                            <p:confirm message="Deseja realmente compartilhar o pet #{petController.selection.nome} com o usuário #{usuarioController.selection.usuario}?"/>
+                        </p:commandButton>
+                    <p:confirmDialog global="true" >
+                        <p:commandButton value="sim" styleClass="ui-confirmdialog-yes"/>
+                        <p:commandButton value="no" styleClass="ui-confirmdialog-no"/>
+
+                    </p:confirmDialog>
+                </b:form>
+            </p:dialog>
+        </c:if>
+
+        <!-- -->
+
+    </h:body>
+</html>
+

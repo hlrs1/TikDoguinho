@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+
+        <c:if test="#{loginController.usuarioLogado ne null}">
+            <script>
+                location.href = 'indexUsuario.xhtml'
+            </script>
+        </c:if>
+
+        <b:growl id="gro" show-summary="true" show-detail="true" delay="4000"/>
+
+        <b:jumbotron >
+            <h3 style="font-family: fantasy">TikDoguinho</h3>
+            <h4>diversão e pets</h4>
+        </b:jumbotron>
+        <p:dialog id="dialLogin" draggable="false" closable="false" 
+                  closeOnEscape="false" resizable="false" modal="false"
+                  visible="true">
+            <b:form>
+                <b:panelGrid columns="2">
+
+                    <h:outputText value="login:"/>
+                    <b:inputText value="#{login}"/>
+
+                    <h:outputText value="senha:"/>
+                    <b:inputSecret value="#{senha}"/>
+
+                </b:panelGrid>
+
+                <b:commandButton value="logar" look="primary" 
+                                 action="#{loginController.realizarLogin(login, senha)}"/><br/>
+                <h:outputText value="não é registrado?"/>
+                <b:button look="link" value="registre-se" onclick="$('.mRegistro').modal('show')"/>
+
+            </b:form>
+        </p:dialog>
+
+        <b:form id="formRegistro" enctype="multipart/form-data">
+            <b:modal id="modalRegistro" class="mRegistro">
+                <b:panelGrid columns="2">
+
+                    <h:outputText value="Login:"/>
+                    <b:inputText value="#{usuarioController.usuarioCadastro.usuario}" required="true" requiredMessage="O Campo login é obrigatório"/>
+
+                    <h:outputText value="e-mail:"/>
+                    <b:inputText value="#{usuarioController.usuarioCadastro.email}"/>
+                    <h:outputText value="Mãe de pet?:"/>
+                    <b:selectOneMenu value="#{usuarioController.usuarioCadastro.mamae}">
+                        <f:selectItem itemValue="false" itemLabel="Não" /> 
+                        <f:selectItem itemValue="true" itemLabel="Sim"/>
+                    </b:selectOneMenu> 
+                    <h:outputText value="Senha:"/>
+                    <b:inputSecret value="#{usuarioController.usuarioCadastro.senha}" required="true" requiredMessage="O Campo senha é obrigatório"/>
+
+                    <h:outputText value="Confirma:"/>
+                    <b:inputSecret value="#{confirma}" required="true" requiredMessage="O Campo confirma é obrigatório"/>
+                    <p:panel>
+                        <p:graphicImage id="imagemUsuario" width="110" height="110" cache="false" class="img-thumbnail" value="#{usuarioController.tagImagem}" style="border-radius: 50%; width: 100px; height: 100px; " />
+                        <p:fileUpload fileUploadListener="#{usuarioController.handleFileUpload}"  mode="advanced" 
+                                      auto="true" sizeLimit="2000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" 
+                                      update=":gro imagemUsuario "/>
+                    </p:panel>
+                    <!-- 
+                        esta imagem faz parte da gambiarra
+                    
+                    <b:panel id="painelImagem" >
+                        <img src='#{usuarioController.tagImagem}' width="100"/>
+                    </b:panel>-->
+
+
+                    <b:commandButton value="Cadastrar" 
+                                     action="#{usuarioController.inserir(confirma)}"/>
+
+                </b:panelGrid>
+            </b:modal>
+        </b:form>
+
+        <img src="images/pets.png" width="1000"/>
+    </h:body>
+</html>
+

@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:include src="menuUsuario.xhtml"/>
+        
+        <b:form id="formPet" enctype="multipart/form-data" style="width: 50%;margin: 0 auto">
+
+                
+                    <b:panelGrid columns="3">
+
+                        <b:panelGrid columns="1">
+                            <h:outputText value="Nome"/>
+                            <b:inputText value="#{petController.petCadastro.nome}"/>                        
+                        </b:panelGrid>
+
+                        <b:panelGrid columns="1">
+                            <h:outputText value="Mes de Nascimento"/>
+                            <b:selectOneMenu value="#{petController.mes}">
+                                <f:selectItem itemValue="Jan" itemLabel="Janeiro" /> 
+                                <f:selectItem itemValue="Fev" itemLabel="Fevereiro"/>
+                                <f:selectItem itemValue="Mar" itemLabel="Março"/>
+                                <f:selectItem itemValue="Abr" itemLabel="Abril"/>
+                                <f:selectItem itemValue="Mai" itemLabel="Maio"/>
+                                <f:selectItem itemValue="Jun" itemLabel="Junho"/>
+                                <f:selectItem itemValue="Jul" itemLabel="Julho"/>
+                                <f:selectItem itemValue="Ago" itemLabel="Agosto"/>
+                                <f:selectItem itemValue="Set" itemLabel="Setembro"/>
+                                <f:selectItem itemValue="Out" itemLabel="Outubro"/>
+                                <f:selectItem itemValue="Nov" itemLabel="Novembro"/>
+                                <f:selectItem itemValue="Dez" itemLabel="Dezembro"/>
+                            </b:selectOneMenu> 
+                                
+                        </b:panelGrid>
+
+                        <b:panelGrid columns="1">
+                            <h:outputText value="Ano de Nascimento"/>
+                            <b:inputText value="#{petController.ano}"/>                      
+                        </b:panelGrid>
+
+                        <b:panelGrid columns="1">
+                            <h:outputText value="Porte"/>
+                            <b:selectOneMenu value="#{petController.petCadastro.porte}">
+                                <f:selectItem itemValue="Pequeno" itemLabel="Pequeno" /> 
+                                <f:selectItem itemValue="Médio" itemLabel="Médio"/>
+                                <f:selectItem itemValue="Grande" itemLabel="Grande"/>
+                            </b:selectOneMenu>                       
+                        </b:panelGrid>
+                    </b:panelGrid>
+                    
+                    <p:panel >
+                        <p:graphicImage id="imagemPet" width="110" height="110" cache="false" class="img-thumbnail" value="#{petController.imagemPet}" style="border-radius: 50%; width: 100px; height: 100px; " />
+                        <p:fileUpload fileUploadListener="#{petController.handleFileUpload}"  mode="advanced" 
+                                      auto="true" sizeLimit="2000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" 
+                                      update="imagemPet " />
+                    </p:panel>
+                    
+                    
+                    <b:commandButton value="inserir Pet" action="#{petController.inserir()}"/>
+                                        
+
+
+        </b:form>
+    </h:body>
+</html>
+

@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:include src="menuUsuario.xhtml"/>
+        
+        <b:form id="formAlerta" enctype="multipart/form-data">
+
+            <b:tabView active-index="0"  tabPosition="bottom" style-class="tabview">
+                
+                <b:tab title="Informações do Doguinho">
+                    <b:panelGrid columns="4">
+
+                        <b:panelGrid columns="1">
+                            <h:outputText value="Cor"/>
+                            <b:inputText value="#{alertaController.alertaCadastro.doguinho.cor}"/>                        
+                        </b:panelGrid>
+
+                        <b:panelGrid columns="1">
+                            <h:outputText value="Raça"/>
+                            <b:inputText value="#{alertaController.alertaCadastro.doguinho.raca}"/> 
+                        </b:panelGrid>
+
+                        <b:panelGrid columns="1">
+                            <h:outputText value="Sexo"/>
+                            <b:selectOneMenu value="#{alertaController.alertaCadastro.doguinho.sexo}">
+                                <f:selectItem itemValue="M" itemLabel="Macho" /> 
+                                <f:selectItem itemValue="F" itemLabel="Fêmea"/>
+                            </b:selectOneMenu>                       
+                        </b:panelGrid>
+
+                        <b:panelGrid columns="1">
+                            <h:outputText value="Porte"/>
+                            <b:selectOneMenu value="#{alertaController.alertaCadastro.doguinho.porte}">
+                                <f:selectItem itemValue="P" itemLabel="Pequeno" /> 
+                                <f:selectItem itemValue="M" itemLabel="Médio"/>
+                                <f:selectItem itemValue="G" itemLabel="Grande"/>
+                            </b:selectOneMenu>                       
+                        </b:panelGrid>
+                    </b:panelGrid>
+                    <b:panelGrid columns="2">
+
+                        <b:panelGrid columns="1">
+                            <h:outputText value="Identificação"/>
+                            <b:inputText value="#{alertaController.alertaCadastro.doguinho.identificacao}"/>                        
+                        </b:panelGrid>
+                        <b:panelGrid columns="1">
+                            <h:outputText value="Deficiência Aparente"/>
+                            <b:inputText value="#{alertaController.alertaCadastro.doguinho.deficienciaAparente}"/>                        
+                        </b:panelGrid>
+
+                    </b:panelGrid>
+
+                    <b:panelGrid columns="1">
+                        <h:outputText value="Situação"/>
+                        <b:inputTextarea value="#{alertaController.alertaCadastro.doguinho.situacao}"/>                        
+                    </b:panelGrid>
+
+                    <p:fileUpload fileUploadListener="#{alertaController.handleFileUpload}"  mode="advanced" 
+                                   auto="true" sizeLimit="2000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" 
+                                   update=":growMenu painelImagem"/>
+                    <!-- 
+                        esta imagem faz parte da gambiarra
+                    -->
+                    <b:panel id="painelImagem" >
+                        <img src='#{alertaController.tagImagem}'/>
+                    </b:panel>
+                     
+                    
+                </b:tab>
+                <b:tab title="Informações do Alerta">
+                    <b:panelGrid columns="1">
+                        <h:outputText value="Local onde foi visto"/>
+                        <b:inputText value="#{alertaController.alertaCadastro.localVistoPorUltimo}"/>
+                    </b:panelGrid>
+                    <b:panelGrid columns="1">
+                        <h:outputText value="Descrição inicial do alerta"/>
+                        <b:inputTextarea value="#{alertaController.alertaCadastro.descricaoInicial}"/>
+                    </b:panelGrid>
+                    
+                    <b:commandButton value="inserir alerta" action="#{alertaController.inserir()}"/>
+                </b:tab>
+                
+            </b:tabView>
+
+        </b:form>
+    </h:body>
+</html>
+
